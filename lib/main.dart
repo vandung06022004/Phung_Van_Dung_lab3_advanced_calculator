@@ -1,7 +1,3 @@
-// ============================================================
-//  ADVANCED CALCULATOR — Chapter 3 Lab
-//  All code in one file for easy Android Studio setup
-// ============================================================
 
 import 'dart:convert';
 import 'dart:math' as math;
@@ -23,10 +19,6 @@ void main() async {
   );
 }
 
-// ══════════════════════════════════════════════════════════════
-// ENUMS & MODELS
-// ══════════════════════════════════════════════════════════════
-
 enum CalcMode { basic, scientific, programmer }
 
 enum AngleMode { deg, rad }
@@ -45,10 +37,6 @@ class HistoryItem {
   factory HistoryItem.fromJson(Map<String, dynamic> j) =>
       HistoryItem(j['e'], j['r'], DateTime.parse(j['t']));
 }
-
-// ══════════════════════════════════════════════════════════════
-// CALCULATOR LOGIC (pure math, no Flutter)
-// ══════════════════════════════════════════════════════════════
 
 class CalcLogic {
   static String evaluate(String expr, {bool isDeg = true}) {
@@ -146,8 +134,6 @@ class CalcLogic {
     for (int i = 2; i <= n; i++) r *= i;
     return r.toString();
   }
-
-  // Programmer
   static String toHex(int v) => '0x${v.toRadixString(16).toUpperCase()}';
   static String toBin(int v) => '0b${v.toRadixString(2)}';
   static String toOct(int v) => '0o${v.toRadixString(8)}';
@@ -167,10 +153,6 @@ class CalcLogic {
     return c;
   }
 }
-
-// ══════════════════════════════════════════════════════════════
-// PROVIDER — STATE MANAGEMENT
-// ══════════════════════════════════════════════════════════════
 
 class CalcProvider extends ChangeNotifier {
   String _expr = '';
@@ -232,8 +214,6 @@ class CalcProvider extends ChangeNotifier {
   void _vibrate() {
     if (_haptic) HapticFeedback.lightImpact();
   }
-
-  // ─── Input ───────────────────────────────────────────────────
 
   void digit(String d) {
     _vibrate();
@@ -328,8 +308,6 @@ class CalcProvider extends ChangeNotifier {
     } catch (_) {}
   }
 
-  // ─── Scientific ───────────────────────────────────────────────
-
   void scientific(String fn) {
     _vibrate();
     try {
@@ -379,15 +357,12 @@ class CalcProvider extends ChangeNotifier {
   void toggle2nd() { _show2nd = !_show2nd; notifyListeners(); }
   void toggleAngle() { _vibrate(); _angle = isDeg ? AngleMode.rad : AngleMode.deg; _save(); notifyListeners(); }
 
-  // ─── Memory ───────────────────────────────────────────────────
-
   void mStore()  { _vibrate(); try { _memory = double.parse(_display); _save(); notifyListeners(); } catch (_) {} }
   void mRecall() { _vibrate(); if (_memory != null) { _display = _fmtVal(_memory!); _expr = _display; _newInput = true; notifyListeners(); } }
   void mClear()  { _vibrate(); _memory = null; _save(); notifyListeners(); }
   void mAdd()    { _vibrate(); try { _memory = (_memory ?? 0) + double.parse(_display); _save(); notifyListeners(); } catch (_) {} }
   void mSub()    { _vibrate(); try { _memory = (_memory ?? 0) - double.parse(_display); _save(); notifyListeners(); } catch (_) {} }
 
-  // ─── Programmer ───────────────────────────────────────────────
 
   String get programmerInfo {
     try {
@@ -403,8 +378,6 @@ class CalcProvider extends ChangeNotifier {
     catch (_) {}
   }
 
-  // ─── History ─────────────────────────────────────────────────
-
   void _addHistory(String e, String r) {
     if (r.startsWith('Error')) return;
     _history.insert(0, HistoryItem(e, r, DateTime.now()));
@@ -416,8 +389,6 @@ class CalcProvider extends ChangeNotifier {
   }
 
   void clearHistory() { _history.clear(); _save(); notifyListeners(); }
-
-  // ─── Settings ─────────────────────────────────────────────────
 
   void setMode(CalcMode m) { _mode = m; _save(); notifyListeners(); }
   void toggleTheme() { _isDark = !_isDark; _save(); notifyListeners(); }
@@ -431,10 +402,6 @@ class CalcProvider extends ChangeNotifier {
     return s;
   }
 }
-
-// ══════════════════════════════════════════════════════════════
-// APP THEMES
-// ══════════════════════════════════════════════════════════════
 
 class AppTheme {
   static const _accent_light = Color(0xFFFF6B6B);
@@ -455,10 +422,6 @@ class AppTheme {
   );
 }
 
-// ══════════════════════════════════════════════════════════════
-// APP ROOT
-// ══════════════════════════════════════════════════════════════
-
 class AdvancedCalculatorApp extends StatelessWidget {
   const AdvancedCalculatorApp({super.key});
   @override
@@ -474,10 +437,6 @@ class AdvancedCalculatorApp extends StatelessWidget {
     );
   }
 }
-
-// ══════════════════════════════════════════════════════════════
-// CALCULATOR SCREEN
-// ══════════════════════════════════════════════════════════════
 
 class CalculatorScreen extends StatelessWidget {
   const CalculatorScreen({super.key});
@@ -538,13 +497,10 @@ class CalculatorScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: Column(
               children: [
-                // Mode selector
                 const ModeSelector(),
                 const SizedBox(height: 10),
-                // Display
                 const DisplayArea(),
                 const SizedBox(height: 8),
-                // Angle toggle (scientific only)
                 if (calc.mode == CalcMode.scientific) ...[
                   GestureDetector(
                     onTap: () => calc.toggleAngle(),
@@ -560,7 +516,6 @@ class CalculatorScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                 ],
-                // History quick preview
                 if (calc.history.isNotEmpty) ...[
                   SizedBox(
                     height: 26,
@@ -588,7 +543,6 @@ class CalculatorScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                 ],
-                // Button grid
                 Expanded(child: const ButtonGrid()),
               ],
             ),
@@ -598,10 +552,6 @@ class CalculatorScreen extends StatelessWidget {
     );
   }
 }
-
-// ══════════════════════════════════════════════════════════════
-// MODE SELECTOR
-// ══════════════════════════════════════════════════════════════
 
 class ModeSelector extends StatelessWidget {
   const ModeSelector({super.key});
@@ -651,10 +601,6 @@ class ModeSelector extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-// DISPLAY AREA
-// ══════════════════════════════════════════════════════════════
-
 class DisplayArea extends StatelessWidget {
   const DisplayArea({super.key});
 
@@ -682,7 +628,6 @@ class DisplayArea extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Status chips row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -702,7 +647,6 @@ class DisplayArea extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 6),
-            // Previous expression
             if (calc.prevExpr.isNotEmpty)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -711,7 +655,6 @@ class DisplayArea extends StatelessWidget {
                     style: TextStyle(fontSize: 14, color: fg.withOpacity(0.4), fontWeight: FontWeight.w300)),
               ),
             const SizedBox(height: 4),
-            // Main display
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 180),
               transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),
@@ -729,7 +672,6 @@ class DisplayArea extends StatelessWidget {
                 ),
               ),
             ),
-            // Programmer info
             if (calc.mode == CalcMode.programmer && calc.programmerInfo.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -766,10 +708,6 @@ class _Chip extends StatelessWidget {
     child: Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
   );
 }
-
-// ══════════════════════════════════════════════════════════════
-// CALCULATOR BUTTON
-// ══════════════════════════════════════════════════════════════
 
 enum BtnType { num, op, fn, eq, mem }
 
@@ -853,10 +791,6 @@ class _CBtnState extends State<CBtn> with SingleTickerProviderStateMixin {
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-// BUTTON GRID
-// ══════════════════════════════════════════════════════════════
-
 class ButtonGrid extends StatelessWidget {
   const ButtonGrid({super.key});
 
@@ -881,8 +815,6 @@ Widget _grid(List<Widget> children, int cols, {double ratio = 1.1}) =>
       physics: const NeverScrollableScrollPhysics(),
       children: children,
     );
-
-// ─── Basic 4×5 ───────────────────────────────────────────────
 
 class _BasicGrid extends StatelessWidget {
   const _BasicGrid();
@@ -914,8 +846,6 @@ class _BasicGrid extends StatelessWidget {
   }
 }
 
-// ─── Scientific 6×6 ──────────────────────────────────────────
-
 class _SciGrid extends StatelessWidget {
   const _SciGrid();
   @override
@@ -924,7 +854,6 @@ class _SciGrid extends StatelessWidget {
     final s2 = c.show2nd;
     final accent = Theme.of(context).colorScheme.primary;
     return _grid([
-      // Row 1
       CBtn('2nd', BtnType.fn, () => c.toggle2nd(), fs: 13,
           bg: s2 ? accent : null, fg: s2 ? Colors.white : null),
       CBtn(s2 ? 'asin' : 'sin', BtnType.fn, () => c.scientific('sin'), fs: 13),
@@ -932,35 +861,30 @@ class _SciGrid extends StatelessWidget {
       CBtn(s2 ? 'atan' : 'tan', BtnType.fn, () => c.scientific('tan'), fs: 13),
       CBtn('ln',  BtnType.fn, () => c.scientific('ln'),  fs: 13),
       CBtn('log', BtnType.fn, () => c.scientific('log'), fs: 13),
-      // Row 2
       CBtn('x²',  BtnType.fn, () => c.scientific('x²'), fs: 14),
       CBtn(s2 ? 'x²' : '√', BtnType.fn, () => c.scientific(s2 ? 'x²' : '√'), fs: 15),
       CBtn('xʸ',  BtnType.fn, () => c.power(), fs: 14),
       CBtn('(',   BtnType.fn, () => c.paren()),
       CBtn(')',   BtnType.fn, () => c.paren()),
       CBtn('÷',   BtnType.op, () => c.op('÷')),
-      // Row 3
       CBtn('MC', BtnType.mem, () => c.mClear(), fs: 13),
       CBtn('7',  BtnType.num, () => c.digit('7')),
       CBtn('8',  BtnType.num, () => c.digit('8')),
       CBtn('9',  BtnType.num, () => c.digit('9')),
       CBtn('C',  BtnType.fn,  () => c.clear()),
       CBtn('×',  BtnType.op,  () => c.op('×')),
-      // Row 4
       CBtn('MR', BtnType.mem, () => c.mRecall(), fs: 13),
       CBtn('4',  BtnType.num, () => c.digit('4')),
       CBtn('5',  BtnType.num, () => c.digit('5')),
       CBtn('6',  BtnType.num, () => c.digit('6')),
       CBtn('CE', BtnType.fn,  () => c.clearEntry(), fs: 13),
       CBtn('−',  BtnType.op,  () => c.op('-')),
-      // Row 5
       CBtn('M+', BtnType.mem, () => c.mAdd(), fs: 13),
       CBtn('1',  BtnType.num, () => c.digit('1')),
       CBtn('2',  BtnType.num, () => c.digit('2')),
       CBtn('3',  BtnType.num, () => c.digit('3')),
       CBtn('%',  BtnType.fn,  () => c.percent()),
       CBtn('+',  BtnType.op,  () => c.op('+')),
-      // Row 6
       CBtn('M−', BtnType.mem, () => c.mSub(), fs: 13),
       CBtn('±',  BtnType.fn,  () => c.toggleSign()),
       CBtn('0',  BtnType.num, () => c.digit('0')),
@@ -970,8 +894,6 @@ class _SciGrid extends StatelessWidget {
     ], 6, ratio: 1.0);
   }
 }
-
-// ─── Programmer 4×6 ──────────────────────────────────────────
 
 class _ProgGrid extends StatelessWidget {
   const _ProgGrid();
@@ -1006,10 +928,6 @@ class _ProgGrid extends StatelessWidget {
     ], 4);
   }
 }
-
-// ══════════════════════════════════════════════════════════════
-// HISTORY SCREEN
-// ══════════════════════════════════════════════════════════════
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -1103,10 +1021,6 @@ class HistoryScreen extends StatelessWidget {
     return '${dt.day}/${dt.month}';
   }
 }
-
-// ══════════════════════════════════════════════════════════════
-// SETTINGS SCREEN
-// ══════════════════════════════════════════════════════════════
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
