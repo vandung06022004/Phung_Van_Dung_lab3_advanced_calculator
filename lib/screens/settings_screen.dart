@@ -1,4 +1,3 @@
-// lib/screens/settings_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/calculator_provider.dart';
@@ -22,7 +21,6 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Theme
           _section('Appearance'),
           _settingTile(
             'Theme',
@@ -40,8 +38,6 @@ class SettingsScreen extends StatelessWidget {
 
           const Divider(),
           _section('Calculator'),
-
-          // Decimal Precision
           _settingTile(
             'Decimal Precision',
             subtitle: '${settings.decimalPrecision} places',
@@ -54,8 +50,6 @@ class SettingsScreen extends StatelessWidget {
               onChanged: (val) => calc.updateSettings(settings.copyWith(decimalPrecision: val!)),
             ),
           ),
-
-          // Angle Mode
           _settingTile(
             'Angle Mode',
             subtitle: 'For scientific calculations',
@@ -72,15 +66,11 @@ class SettingsScreen extends StatelessWidget {
 
           const Divider(),
           _section('Feedback'),
-
-          // Haptic
           SwitchListTile(
             title: const Text('Haptic Feedback'),
             value: settings.hapticFeedback,
             onChanged: (val) => calc.updateSettings(settings.copyWith(hapticFeedback: val)),
           ),
-
-          // Sound
           SwitchListTile(
             title: const Text('Sound Effects'),
             value: settings.soundEffects,
@@ -89,8 +79,6 @@ class SettingsScreen extends StatelessWidget {
 
           const Divider(),
           _section('History'),
-
-          // History Size
           _settingTile(
             'History Size',
             trailing: DropdownButton<int>(
@@ -108,8 +96,6 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
           ),
-
-          // Clear History
           ListTile(
             title: const Text('Clear All History', style: TextStyle(color: Colors.red)),
             leading: const Icon(Icons.delete_forever, color: Colors.red),
