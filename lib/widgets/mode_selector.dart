@@ -1,4 +1,3 @@
-// lib/widgets/mode_selector.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/calculator_mode.dart';
