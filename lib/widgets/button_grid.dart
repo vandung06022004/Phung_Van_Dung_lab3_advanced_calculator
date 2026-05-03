@@ -1,4 +1,3 @@
-// lib/widgets/button_grid.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/calculator_provider.dart';
@@ -32,15 +31,11 @@ class ButtonGrid extends StatelessWidget {
     );
   }
 }
-
-// ---- Helper to call evaluate with history ----
 void _evaluate(BuildContext context) {
   final calc = context.read<CalculatorProvider>();
   final history = context.read<HistoryProvider>();
   calc.evaluate((expr, result) => history.addEntry(expr, result));
 }
-
-// ========== BASIC MODE (4×5 grid) ==========
 class _BasicGrid extends StatelessWidget {
   final bool isDark;
   const _BasicGrid({required this.isDark});
@@ -51,27 +46,22 @@ class _BasicGrid extends StatelessWidget {
     final spacing = AppDimensions.buttonSpacing;
 
     final buttons = [
-      // Row 1
       _Btn('C', ButtonType.special, () => calc.clear()),
       _Btn('CE', ButtonType.special, () => calc.clearEntry()),
       _Btn('%', ButtonType.special, () => calc.percentage()),
       _Btn('÷', ButtonType.operator, () => calc.inputOperator('/')),
-      // Row 2
       _Btn('7', ButtonType.number, () => calc.inputDigit('7')),
       _Btn('8', ButtonType.number, () => calc.inputDigit('8')),
       _Btn('9', ButtonType.number, () => calc.inputDigit('9')),
       _Btn('×', ButtonType.operator, () => calc.inputOperator('*')),
-      // Row 3
       _Btn('4', ButtonType.number, () => calc.inputDigit('4')),
       _Btn('5', ButtonType.number, () => calc.inputDigit('5')),
       _Btn('6', ButtonType.number, () => calc.inputDigit('6')),
       _Btn('-', ButtonType.operator, () => calc.inputOperator('-')),
-      // Row 4
       _Btn('1', ButtonType.number, () => calc.inputDigit('1')),
       _Btn('2', ButtonType.number, () => calc.inputDigit('2')),
       _Btn('3', ButtonType.number, () => calc.inputDigit('3')),
       _Btn('+', ButtonType.operator, () => calc.inputOperator('+')),
-      // Row 5
       _Btn('±', ButtonType.special, () => calc.toggleSign()),
       _Btn('0', ButtonType.number, () => calc.inputDigit('0')),
       _Btn('.', ButtonType.number, () => calc.inputDecimal()),
@@ -81,8 +71,6 @@ class _BasicGrid extends StatelessWidget {
     return _buildGrid(buttons, 4, spacing, isDark);
   }
 }
-
-// ========== SCIENTIFIC MODE (6×6 grid) ==========
 class _ScientificGrid extends StatelessWidget {
   final bool isDark;
   const _ScientificGrid({required this.isDark});
@@ -94,7 +82,6 @@ class _ScientificGrid extends StatelessWidget {
     final is2nd = calc.isSecondFunction;
 
     final buttons = [
-      // Row 1
       _Btn(is2nd ? '2nd' : '2nd', ButtonType.special, () => calc.toggleSecondFunction(),
           color: is2nd ? (isDark ? AppColors.darkAccent : AppColors.lightAccent) : null),
       _Btn(is2nd ? 'asin' : 'sin', ButtonType.special,
@@ -106,7 +93,6 @@ class _ScientificGrid extends StatelessWidget {
       _Btn(is2nd ? 'log₂' : 'Ln', ButtonType.special,
           () => calc.inputFunction(is2nd ? 'log2' : 'ln')),
       _Btn('log', ButtonType.special, () => calc.inputFunction('log')),
-      // Row 2
       _Btn('x²', ButtonType.special, () => calc.inputOperator('^2')),
       _Btn(is2nd ? '∛' : '√', ButtonType.special,
           () => calc.inputFunction(is2nd ? 'cbrt' : 'sqrt')),
@@ -114,28 +100,24 @@ class _ScientificGrid extends StatelessWidget {
       _Btn('(', ButtonType.special, () => calc.inputParenthesis('(')),
       _Btn(')', ButtonType.special, () => calc.inputParenthesis(')')),
       _Btn('÷', ButtonType.operator, () => calc.inputOperator('/')),
-      // Row 3
       _Btn('MC', ButtonType.memory, () => calc.memoryClear()),
       _Btn('7', ButtonType.number, () => calc.inputDigit('7')),
       _Btn('8', ButtonType.number, () => calc.inputDigit('8')),
       _Btn('9', ButtonType.number, () => calc.inputDigit('9')),
       _Btn('C', ButtonType.special, () => calc.clear()),
       _Btn('×', ButtonType.operator, () => calc.inputOperator('*')),
-      // Row 4
       _Btn('MR', ButtonType.memory, () => calc.memoryRecall()),
       _Btn('4', ButtonType.number, () => calc.inputDigit('4')),
       _Btn('5', ButtonType.number, () => calc.inputDigit('5')),
       _Btn('6', ButtonType.number, () => calc.inputDigit('6')),
       _Btn('CE', ButtonType.special, () => calc.clearEntry()),
       _Btn('-', ButtonType.operator, () => calc.inputOperator('-')),
-      // Row 5
       _Btn('M+', ButtonType.memory, () => calc.memoryAdd()),
       _Btn('1', ButtonType.number, () => calc.inputDigit('1')),
       _Btn('2', ButtonType.number, () => calc.inputDigit('2')),
       _Btn('3', ButtonType.number, () => calc.inputDigit('3')),
       _Btn('%', ButtonType.special, () => calc.percentage()),
       _Btn('+', ButtonType.operator, () => calc.inputOperator('+')),
-      // Row 6
       _Btn('M-', ButtonType.memory, () => calc.memorySubtract()),
       _Btn('±', ButtonType.special, () => calc.toggleSign()),
       _Btn('0', ButtonType.number, () => calc.inputDigit('0')),
@@ -147,8 +129,6 @@ class _ScientificGrid extends StatelessWidget {
     return _buildGrid(buttons, 6, spacing, isDark);
   }
 }
-
-// ========== PROGRAMMER MODE ==========
 class _ProgrammerGrid extends StatelessWidget {
   final bool isDark;
   const _ProgrammerGrid({required this.isDark});
@@ -160,7 +140,6 @@ class _ProgrammerGrid extends StatelessWidget {
 
     return Column(
       children: [
-        // Base selector
         Row(
           children: ['BIN', 'OCT', 'DEC', 'HEX'].asMap().entries.map((e) {
             final bases = [2, 8, 10, 16];
@@ -236,8 +215,6 @@ class _ProgrammerGrid extends StatelessWidget {
     return CalculatorButton(label: label, type: type, onPressed: cb, isDark: isDark);
   }
 }
-
-// ========== Utils ==========
 class _Btn {
   final String label;
   final ButtonType type;
