@@ -1,4 +1,3 @@
-// lib/screens/calculator_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/calculator_provider.dart';
@@ -24,13 +23,11 @@ class CalculatorScreen extends StatelessWidget {
       backgroundColor: bgColor,
       body: SafeArea(
         child: GestureDetector(
-          // Swipe right on display = delete last char
           onHorizontalDragEnd: (details) {
             if (details.primaryVelocity != null && details.primaryVelocity! > 300) {
               calc.deleteLastChar();
             }
           },
-          // Swipe up = open history
           onVerticalDragEnd: (details) {
             if (details.primaryVelocity != null && details.primaryVelocity! < -300) {
               Navigator.push(
@@ -43,7 +40,6 @@ class CalculatorScreen extends StatelessWidget {
             padding: const EdgeInsets.all(AppDimensions.screenPadding),
             child: Column(
               children: [
-                // Top bar
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -72,16 +68,10 @@ class CalculatorScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-
-                // Mode selector
                 const ModeSelector(),
                 const SizedBox(height: 12),
-
-                // Display area
                 const DisplayArea(),
                 const SizedBox(height: 16),
-
-                // Angle mode toggle for scientific
                 if (calc.mode == CalculatorMode.scientific)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -112,8 +102,6 @@ class CalculatorScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
-                // Button grid
                 Expanded(child: const ButtonGrid()),
               ],
             ),
