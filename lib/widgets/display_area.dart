@@ -1,4 +1,3 @@
-// lib/widgets/display_area.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/calculator_provider.dart';
@@ -70,7 +69,6 @@ class _DisplayAreaState extends State<DisplayArea>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // Mode & angle mode indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -95,8 +93,6 @@ class _DisplayAreaState extends State<DisplayArea>
             ],
           ),
           const SizedBox(height: 8),
-
-          // History preview (last 3)
           if (history.recentThree.isNotEmpty)
             SizedBox(
               height: 48,
@@ -134,8 +130,6 @@ class _DisplayAreaState extends State<DisplayArea>
             ),
 
           const SizedBox(height: 8),
-
-          // Expression line
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             reverse: true,
@@ -146,8 +140,6 @@ class _DisplayAreaState extends State<DisplayArea>
             ),
           ),
           const SizedBox(height: 4),
-
-          // Main display with shake on error
           AnimatedBuilder(
             animation: _shakeAnimation,
             builder: (context, child) {
@@ -172,8 +164,6 @@ class _DisplayAreaState extends State<DisplayArea>
               ),
             ),
           ),
-
-          // Programmer mode conversions
           if (calc.mode == CalculatorMode.programmer) ...[
             const SizedBox(height: 8),
             _programmerDisplay(calc.display, dimColor),
